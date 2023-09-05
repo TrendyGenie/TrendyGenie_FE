@@ -4,8 +4,10 @@ import { GlobalStyles } from './GlobalStyles';
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <StyledComponentsRegistry>
-      <GlobalStyles />
-      {children}
+      <div>
+        <GlobalStyles />
+        {children}
+      </div>
     </StyledComponentsRegistry>
   );
 };
