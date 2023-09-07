@@ -1,62 +1,70 @@
 'use client';
-import React, { useState, FC } from 'react';
-import Draggable from 'react-draggable';
-import { Wrapper, DragIcon, Form, Input } from './styles';
+import React, { useState, FC, useEffect, useCallback } from 'react';
+import { Wrapper, DragIcon, Form, Input, PopularSearch } from './styles';
 import search from '../../../../public/svgs/search.svg';
 import Image from 'next/image';
+import { data as Data } from './popularSearch';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { placesAtom, queryAtom, typeAtom } from '../../../../atoms/searchAtom';
+import { useGooglePlace } from '../../../../lib/axios';
+import debounce from '../../../../lib/debounce';
+import DisplayNearbyPlace from '../DisplayNearbyPlace';
 
-const DraggedComponent: FC = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const BottomSheet: FC = () => {
+  const [expanded, setExpanded] = useState(false);
+  const [type, setType] = useRecoilState(typeAtom);
+  const [query, setQuery] = useRecoilState(queryAtom);
+  const { getPlaces } = useGooglePlace();
+  const places = useRecoilValue(placesAtom);
 
-  const handleDrag = (e: any, ui: any) => {
-    const { deltaY } = ui;
+  const delayedGetPlaces = useCallback(
+    debounce(() => {
+      getPlaces();
+    }, 500),
+    [query, type]
+  );
 
-    // Adjust the threshold value to control sensitivity
-    const threshold = 100;
-
-    // Calculate the restricted bounds
-    const topBound = window.innerHeight - 254;
-    const bottomBound = 30; // 242px from the bottom
-
-    if (deltaY < -threshold) {
-      setIsExpanded(true);
-    } else if (deltaY > threshold) {
-      setIsExpanded(false);
+  useEffect(() => {
+    if (query || type) {
+      delayedGetPlaces();
     }
+  }, [delayedGetPlaces, query, type]);
 
-    // Ensure the panel stays within the bounds
-    if (e.clientY < topBound) {
-      e.clientY = topBound;
-    } else if (e.clientY > bottomBound) {
-      e.clientY = bottomBound;
-    }
+  const toggleSheet = () => {
+    setExpanded(!expanded);
   };
+  console.log(places);
 
   return (
-    <Draggable
-      axis="y"
-      handle=".handle"
-      onDrag={handleDrag}
-      bounds={{ top: 30, bottom: window.innerHeight - 254 }}
-    >
-      <Wrapper className={`handle ${isExpanded ? 'expanded' : 'collapsed'}`}>
-        <DragIcon />
-        <Form>
-          <Image src={search} alt="Search" />
-          <Input type="text" placeholder="Search for a place" />
-        </Form>
-        <div>
-          {isExpanded ? 'Drag down to collapse' : 'Drag up for more details'}
-        </div>
-        {isExpanded && (
-          <div className="details">
-            {/* Add your additional content here */}
-            <p>Additional Details Here</p>
-          </div>
-        )}
-      </Wrapper>
-    </Draggable>
+    <Wrapper className={expanded ? 'expanded' : ''}>
+      <DragIcon onClick={toggleSheet}>
+        {expanded ? 'Collapse' : 'Expand'}
+      </DragIcon>
+      <Form>
+        <Image src={search} alt="Search" />
+        <Input
+          type="text"
+          placeholder="Search for hotels, restaurants, Lounges..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </Form>
+      {expanded ? (
+        <DisplayNearbyPlace setType={setType} places={places} />
+      ) : (
+        <>
+          <h3>Popular Searches</h3>
+          <PopularSearch>
+            {Data.map((item, index) => (
+              <div key={index} onClick={() => setType(item.name)}>
+                <Image src={item.image} alt={item.name} />
+              </div>
+            ))}
+          </PopularSearch>
+        </>
+      )}
+    </Wrapper>
   );
 };
 
-export default DraggedComponent;
+export default BottomSheet;

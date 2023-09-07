@@ -15,6 +15,7 @@
     "@types/node": "20.5.8",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
+    "axios": "^1.5.0",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
     "next": "13.4.19",
@@ -22,6 +23,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-draggable": "^4.4.5",
+    "react-draggable-bottom-sheet": "^1.13.3",
+    "recoil": "^0.7.7",
     "sanity": "^3.16.2",
     "styled-components": "^5.3.11",
     "typescript": "5.2.2"

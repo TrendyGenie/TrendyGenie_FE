@@ -31,9 +31,7 @@ export const GlobalStyles = styled.createGlobalStyle`
   }
 
   .handle {
-    color: #fff;
     text-align: center;
-    padding: 8px;
     cursor: grab;
   }
 
@@ -43,9 +41,5 @@ export const GlobalStyles = styled.createGlobalStyle`
 
   .collapsed {
     transform: translateY(100%);
-  }
-
-  .details {
-    padding: 16px;
   }
 `;
