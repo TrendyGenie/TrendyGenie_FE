@@ -1,13 +1,18 @@
 'use client';
-import React, { useState, FC, useEffect, useCallback } from 'react';
+import React, { useState, FC, useEffect } from 'react';
 import { Wrapper, DragIcon, Form, Input, PopularSearch } from './styles';
 import search from '../../../../public/svgs/search.svg';
 import Image from 'next/image';
 import { data as Data } from './popularSearch';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { placesAtom, queryAtom, typeAtom } from '../../../../atoms/searchAtom';
+import {
+  loadingAtom,
+  placesAtom,
+  queryAtom,
+  typeAtom,
+} from '../../../../atoms/searchAtom';
 import { useGooglePlace } from '../../../../lib/axios';
-import debounce from '../../../../lib/debounce';
+import { debounce } from '../../../../lib/debounce';
 import DisplayNearbyPlace from '../DisplayNearbyPlace';
 
 const BottomSheet: FC = () => {
@@ -16,22 +21,20 @@ const BottomSheet: FC = () => {
   const [query, setQuery] = useRecoilState(queryAtom);
   const { getPlaces } = useGooglePlace();
   const places = useRecoilValue(placesAtom);
-
-  const delayedGetPlaces = useCallback(
-    debounce(() => {
-      getPlaces();
-    }, 500),
-    [query, type]
-  );
+  const loading = useRecoilValue(loadingAtom);
+  const debouncedFunc = debounce(getPlaces, 3000);
 
   useEffect(() => {
     if (query || type) {
-      delayedGetPlaces();
+      debouncedFunc();
     }
-  }, [delayedGetPlaces, query, type]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, type]);
 
   const toggleSheet = () => {
     setExpanded(!expanded);
+    const debouncedFunc = debounce(getPlaces, 1500);
+    debouncedFunc();
   };
   console.log(places);
 
@@ -50,13 +53,24 @@ const BottomSheet: FC = () => {
         />
       </Form>
       {expanded ? (
-        <DisplayNearbyPlace setType={setType} places={places} />
+        <DisplayNearbyPlace
+          setType={setType}
+          places={places}
+          loading={loading}
+        />
       ) : (
         <>
           <h3>Popular Searches</h3>
           <PopularSearch>
             {Data.map((item, index) => (
-              <div key={index} onClick={() => setType(item.name)}>
+              <div
+                key={index}
+                onClick={() => {
+                  setType(item.name);
+                  const debouncedFunc = debounce(getPlaces, 1500);
+                  debouncedFunc();
+                }}
+              >
                 <Image src={item.image} alt={item.name} />
               </div>
             ))}

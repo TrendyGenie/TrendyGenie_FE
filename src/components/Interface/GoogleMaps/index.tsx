@@ -48,7 +48,7 @@ function GoogleMaps() {
           }
         );
 
-        if (location) {
+        if (location.lat !== 0 && location.lng !== 0) {
           return location;
         }
       }

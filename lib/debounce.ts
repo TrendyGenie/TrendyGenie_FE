@@ -1,19 +1,14 @@
-type DebounceFunction = (
-  func: Function,
-  delay: number
-) => (...args: any[]) => void;
+export const debounce = (
+  func: (...args: any[]) => void,
+  delay: number | undefined
+) => {
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-function debounce(func: Function, delay: number): (...args: any[]) => void {
-  let timeoutId: NodeJS.Timeout | undefined;
   return (...args: any[]) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
+    clearTimeout(timeoutId);
+
     timeoutId = setTimeout(() => {
       func(...args);
-      timeoutId = undefined;
     }, delay);
   };
-}
-
-export default debounce;
+};

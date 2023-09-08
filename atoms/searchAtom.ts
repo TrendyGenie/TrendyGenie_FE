@@ -5,9 +5,9 @@ export const typeAtom = atom({
   default: 'restaurant',
 });
 
-export const radiusAtom = atom({
-  key: 'radiusAtom',
-  default: 1500,
+export const loadingAtom = atom({
+  key: 'loadingAtom',
+  default: false,
 });
 
 export const queryAtom = atom({
