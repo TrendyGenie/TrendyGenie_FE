@@ -11,8 +11,6 @@ import {
 import { FC } from 'react';
 import substitute_img from '../../../../public/images/substitute_img.png';
 import Spinner from '../Spinner';
-import { useGooglePlace } from '../../../../lib/axios';
-import { debounce } from '../../../../lib/debounce';
 
 interface Props {
   type: string;
@@ -26,7 +24,6 @@ const truncate = (str: string, maxLength: number) => {
 };
 
 const DisplayNearbyPlace: FC<Props> = ({ type, setType, places, loading }) => {
-  const { getPlaces } = useGooglePlace();
   return (
     <NearbyPlaceWrapper>
       <Tabs>
@@ -34,12 +31,10 @@ const DisplayNearbyPlace: FC<Props> = ({ type, setType, places, loading }) => {
           <Tab
             className={type === item.name ? 'active' : ''}
             onClick={() => {
-              setType(item.name);
-
               if (type === item.name) {
                 return;
               } else {
-                getPlaces();
+                setType(item.name);
               }
             }}
             key={index}

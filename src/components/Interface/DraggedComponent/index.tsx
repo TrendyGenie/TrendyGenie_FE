@@ -23,6 +23,14 @@ const BottomSheet: FC = () => {
   const places = useRecoilValue(placesAtom);
   const loading = useRecoilValue(loadingAtom);
 
+  useEffect(() => {
+    if (type) {
+      const debounced = debounce(getPlaces, 1000);
+      debounced();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
+
   const toggleSheet = () => {
     setExpanded(!expanded);
 
@@ -48,7 +56,7 @@ const BottomSheet: FC = () => {
         <Image
           src={search}
           alt="Search"
-          onClick={() => debounce(getPlaces, 1500)}
+          onClick={() => debounce(getPlaces, 1000)}
         />
         <Input
           type="text"
@@ -72,8 +80,6 @@ const BottomSheet: FC = () => {
               <div
                 key={index}
                 onClick={() => {
-                  setType(item.name);
-                  
                   toggleSheet();
 
                   if (type === item.name) {
