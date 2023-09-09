@@ -30,6 +30,11 @@ export const Tab = styled.button`
   font-size: 0.6875rem;
   font-weight: 400;
   text-transform: capitalize;
+
+  &.active {
+    background: var(--primary, #000);
+    color: var(--white, #fff);
+  }
 `;
 
 export const DisplayContent = styled.div`
@@ -43,6 +48,8 @@ export const DisplayContent = styled.div`
 
 export const Content = styled.div`
   position: relative;
+  width: 100%;
+  height: 120px;
 
   img {
     width: 100%;

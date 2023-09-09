@@ -22,19 +22,20 @@ const BottomSheet: FC = () => {
   const { getPlaces } = useGooglePlace();
   const places = useRecoilValue(placesAtom);
   const loading = useRecoilValue(loadingAtom);
-  const debouncedFunc = debounce(getPlaces, 3000);
-
-  useEffect(() => {
-    if (query || type) {
-      debouncedFunc();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, type]);
 
   const toggleSheet = () => {
     setExpanded(!expanded);
-    const debouncedFunc = debounce(getPlaces, 1500);
-    debouncedFunc();
+
+    if (expanded) {
+      return;
+    } else {
+      if (places.length === 0) {
+        const debouncedFunc = debounce(getPlaces, 500);
+        debouncedFunc();
+      } else {
+        return;
+      }
+    }
   };
   console.log(places);
 
@@ -44,7 +45,11 @@ const BottomSheet: FC = () => {
         {expanded ? 'Collapse' : 'Expand'}
       </DragIcon>
       <Form>
-        <Image src={search} alt="Search" />
+        <Image
+          src={search}
+          alt="Search"
+          onClick={() => debounce(getPlaces, 1500)}
+        />
         <Input
           type="text"
           placeholder="Search for hotels, restaurants, Lounges..."
@@ -54,6 +59,7 @@ const BottomSheet: FC = () => {
       </Form>
       {expanded ? (
         <DisplayNearbyPlace
+          type={type}
           setType={setType}
           places={places}
           loading={loading}
@@ -67,8 +73,15 @@ const BottomSheet: FC = () => {
                 key={index}
                 onClick={() => {
                   setType(item.name);
-                  const debouncedFunc = debounce(getPlaces, 1500);
-                  debouncedFunc();
+                  
+                  toggleSheet();
+
+                  if (type === item.name) {
+                    return;
+                  } else {
+                    const debouncedFunc = debounce(getPlaces, 500);
+                    debouncedFunc();
+                  }
                 }}
               >
                 <Image src={item.image} alt={item.name} />

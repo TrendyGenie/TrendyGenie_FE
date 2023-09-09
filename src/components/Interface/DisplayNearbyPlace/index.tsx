@@ -15,6 +15,7 @@ import { useGooglePlace } from '../../../../lib/axios';
 import { debounce } from '../../../../lib/debounce';
 
 interface Props {
+  type: string;
   setType: (type: string) => void;
   places: any;
   loading: boolean;
@@ -24,17 +25,22 @@ const truncate = (str: string, maxLength: number) => {
   return str.length > maxLength ? str.substring(0, maxLength) + '...' : str;
 };
 
-const DisplayNearbyPlace: FC<Props> = ({ setType, places, loading }) => {
+const DisplayNearbyPlace: FC<Props> = ({ type, setType, places, loading }) => {
   const { getPlaces } = useGooglePlace();
   return (
     <NearbyPlaceWrapper>
       <Tabs>
         {data.map((item, index) => (
           <Tab
+            className={type === item.name ? 'active' : ''}
             onClick={() => {
               setType(item.name);
-              const debouncedFunc = debounce(getPlaces, 1500);
-              debouncedFunc();
+
+              if (type === item.name) {
+                return;
+              } else {
+                getPlaces();
+              }
             }}
             key={index}
           >
@@ -57,6 +63,8 @@ const DisplayNearbyPlace: FC<Props> = ({ setType, places, loading }) => {
                   alt="image"
                   width={120}
                   height={120}
+                  placeholder="blur"
+                  blurDataURL={substitute_img.src}
                 />
               ) : (
                 <Image
