@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { data } from '../DraggedComponent/popularSearch';
+import { data } from '../PopularSearches/popularSearch';
 import {
   NearbyPlaceWrapper,
   Tabs,

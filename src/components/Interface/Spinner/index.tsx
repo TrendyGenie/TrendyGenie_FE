@@ -15,7 +15,7 @@ const SpinnerWrapper = styled.div`
   border: 0.2rem solid #f3f3f3;
   border-top: 0.2rem solid #3498db;
   animation: spin 2s linear infinite;
-  margin: 10rem auto;
+  margin: 4rem auto;
   @keyframes spin {
     0% {
       transform: rotate(0deg);

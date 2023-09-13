@@ -1,9 +1,6 @@
 'use client';
 import React, { useState, FC, useEffect } from 'react';
-import { Wrapper, DragIcon, Form, Input, PopularSearch } from './styles';
-import search from '../../../../public/svgs/search.svg';
-import Image from 'next/image';
-import { data as Data } from './popularSearch';
+import { Wrapper, DragIcon } from './styles';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   loadingAtom,
@@ -15,12 +12,16 @@ import { useGooglePlace } from '../../../../lib/axios';
 import { debounce } from '../../../../lib/debounce';
 import DisplayNearbyPlace from '../DisplayNearbyPlace';
 import { boundsAtom } from '../../../../atoms/boundsAtom';
+import QueryForm from '../QueryForm';
+import PopularSearches from '../PopularSearches';
+import ViewSearchedList from '../ViewSearchedList';
+import Spinner from '../Spinner';
 
 const BottomSheet: FC = () => {
   const [expanded, setExpanded] = useState(false);
   const [type, setType] = useRecoilState(typeAtom);
-  const [query, setQuery] = useRecoilState(queryAtom);
   const { getPlaces } = useGooglePlace();
+  const query = useRecoilValue(queryAtom);
   const places = useRecoilValue(placesAtom);
   const loading = useRecoilValue(loadingAtom);
   const bounds = useRecoilValue(boundsAtom);
@@ -54,57 +55,29 @@ const BottomSheet: FC = () => {
       <DragIcon onClick={toggleSheet}>
         {expanded ? 'Collapse' : 'Expand'}
       </DragIcon>
-      <Form>
-        <Image
-          src={search}
-          alt="Search"
-          onClick={() => {
-            debounce(getPlaces, 1000);
-            setQuery({ ...query, isSearch: true });
-          }}
-        />
-        <Input
-          type="text"
-          placeholder="Search for hotels, restaurants, Lounges..."
-          value={query.input!}
-          onChange={(e) => {
-            if (query.input === '') {
-              setQuery({ input: e.target.value, isSearch: false });
-            } else {
-              setQuery({ ...query, input: e.target.value });
-            }
-          }}
-        />
-      </Form>
-      {expanded ? (
-        <DisplayNearbyPlace
-          type={type}
-          setType={setType}
-          places={places}
-          loading={loading}
-        />
+      {query.isSearch ? (
+        loading ? (
+          <Spinner />
+        ) : (
+          <ViewSearchedList places={places} expanded={expanded} />
+        )
       ) : (
         <>
-          <h3>Popular Searches</h3>
-          <PopularSearch>
-            {Data.map((item, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  toggleSheet();
-                  setType(item.name);
-                  if (type === item.name) {
-                    return;
-                  } else {
-                    const debouncedFunc = debounce(getPlaces, 500);
-                    debouncedFunc();
-                  }
-                }}
-              >
-                <Image src={item.image} alt={item.name} />
-              </div>
-            ))}
-          </PopularSearch>
+          <QueryForm setExpanded={setExpanded} />
+          {expanded ? (
+            <DisplayNearbyPlace
+              type={type}
+              setType={setType}
+              places={places}
+              loading={loading}
+            />
+          ) : (
+            <PopularSearches
+              toggleSheet={toggleSheet}
+              type={type}
+              setType={setType}
+            />
+          )}
         </>
       )}
     </Wrapper>
