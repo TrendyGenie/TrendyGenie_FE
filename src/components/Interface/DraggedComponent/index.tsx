@@ -14,6 +14,7 @@ import {
 import { useGooglePlace } from '../../../../lib/axios';
 import { debounce } from '../../../../lib/debounce';
 import DisplayNearbyPlace from '../DisplayNearbyPlace';
+import { boundsAtom } from '../../../../atoms/boundsAtom';
 
 const BottomSheet: FC = () => {
   const [expanded, setExpanded] = useState(false);
@@ -22,6 +23,7 @@ const BottomSheet: FC = () => {
   const { getPlaces } = useGooglePlace();
   const places = useRecoilValue(placesAtom);
   const loading = useRecoilValue(loadingAtom);
+  const bounds = useRecoilValue(boundsAtom);
 
   useEffect(() => {
     if (type) {
@@ -37,7 +39,7 @@ const BottomSheet: FC = () => {
     if (expanded) {
       return;
     } else {
-      if (places.length === 0) {
+      if (places.length === 0 || bounds) {
         const debouncedFunc = debounce(getPlaces, 500);
         debouncedFunc();
       } else {
@@ -56,13 +58,22 @@ const BottomSheet: FC = () => {
         <Image
           src={search}
           alt="Search"
-          onClick={() => debounce(getPlaces, 1000)}
+          onClick={() => {
+            debounce(getPlaces, 1000);
+            setQuery({ ...query, isSearch: true });
+          }}
         />
         <Input
           type="text"
           placeholder="Search for hotels, restaurants, Lounges..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={query.input!}
+          onChange={(e) => {
+            if (query.input === '') {
+              setQuery({ input: e.target.value, isSearch: false });
+            } else {
+              setQuery({ ...query, input: e.target.value });
+            }
+          }}
         />
       </Form>
       {expanded ? (
@@ -81,7 +92,7 @@ const BottomSheet: FC = () => {
                 key={index}
                 onClick={() => {
                   toggleSheet();
-
+                  setType(item.name);
                   if (type === item.name) {
                     return;
                   } else {

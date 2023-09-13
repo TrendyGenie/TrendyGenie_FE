@@ -7,11 +7,13 @@ import {
   queryAtom,
   typeAtom,
 } from '../atoms/searchAtom';
+import { boundsAtom } from '../atoms/boundsAtom';
 
 export const useGooglePlace = () => {
   const query = useRecoilValue(queryAtom);
   const type = useRecoilValue(typeAtom);
   const locations = useRecoilValue(locationAtom);
+  const bounds = useRecoilValue(boundsAtom);
   const [, setPlaces] = useRecoilState(placesAtom);
   const [, setLoading] = useRecoilState(loadingAtom);
   const radius = 1500;
@@ -19,10 +21,10 @@ export const useGooglePlace = () => {
     setLoading(true);
     try {
       const response = await axios.post('/api/google-place', {
-        query,
+        query: query.input,
         type,
         radius,
-        location: locations,
+        location: bounds ? bounds : locations,
       });
       const data = await response.data.data;
       if (data) {

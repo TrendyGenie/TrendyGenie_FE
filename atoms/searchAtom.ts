@@ -1,4 +1,7 @@
 import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist();
 
 export const typeAtom = atom({
   key: 'typeAtom',
@@ -12,7 +15,11 @@ export const loadingAtom = atom({
 
 export const queryAtom = atom({
   key: 'queryAtom',
-  default: '',
+  default: {
+    input: '',
+    isSearch: false,
+  },
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const locationAtom = atom({
@@ -26,4 +33,5 @@ export const locationAtom = atom({
 export const placesAtom = atom({
   key: 'placesAtom',
   default: [],
+  effects_UNSTABLE: [persistAtom],
 });

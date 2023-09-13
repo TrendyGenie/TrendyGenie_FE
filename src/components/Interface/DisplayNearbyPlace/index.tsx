@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import { data } from '../DraggedComponent/popularSearch';
 import {
@@ -11,6 +12,8 @@ import {
 import { FC } from 'react';
 import substitute_img from '../../../../public/images/substitute_img.png';
 import Spinner from '../Spinner';
+import { reelsAtom } from '../../../../atoms/reels';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   type: string;
@@ -24,6 +27,7 @@ const truncate = (str: string, maxLength: number) => {
 };
 
 const DisplayNearbyPlace: FC<Props> = ({ type, setType, places, loading }) => {
+  const [, setShowReels] = useRecoilState(reelsAtom);
   return (
     <NearbyPlaceWrapper>
       <Tabs>
@@ -48,7 +52,14 @@ const DisplayNearbyPlace: FC<Props> = ({ type, setType, places, loading }) => {
       ) : (
         <DisplayContent>
           {places?.map((item: any, index: number) => (
-            <Content key={index}>
+            <Content
+              key={index}
+              onClick={() =>
+                setShowReels({
+                  isReelsOpen: true,
+                })
+              }
+            >
               {item?.photos?.length > 0 ? (
                 <Image
                   src={`https://maps.googleapis.com/maps/api/place

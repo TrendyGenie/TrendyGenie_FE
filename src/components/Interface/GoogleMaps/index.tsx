@@ -3,6 +3,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
 import { useRecoilState } from 'recoil';
 import { locationAtom } from '../../../../atoms/searchAtom';
+import { debounce } from '../../../../lib/debounce';
+import { boundsAtom } from '../../../../atoms/boundsAtom';
 
 // You can call getCenter() within an async function to get the center coordinates.
 
@@ -14,6 +16,7 @@ const containerStyle = {
 function GoogleMaps() {
   const [location, setLocation] =
     useRecoilState<google.maps.LatLngLiteral>(locationAtom);
+  const [bounds, setBounds] = useRecoilState(boundsAtom);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!, // Replace with your Google Maps API key
@@ -54,8 +57,7 @@ function GoogleMaps() {
       }
     };
     getUserLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [location, setLocation]);
 
   return isLoaded ? (
     <GoogleMap
@@ -64,6 +66,20 @@ function GoogleMaps() {
       zoom={15}
       onLoad={onLoad as any}
       onUnmount={onUnmount}
+      onCenterChanged={() => {
+        if (map) {
+          const center = map.getCenter() as google.maps.LatLng;
+
+          const debounced = debounce(() => {
+            setBounds({
+              lat: center.lat(),
+              lng: center.lng(),
+            });
+          }, 1500);
+
+          debounced();
+        }
+      }}
     >
       <MarkerF position={location!} />
     </GoogleMap>

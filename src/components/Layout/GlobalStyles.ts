@@ -10,6 +10,7 @@ export const GlobalStyles = styled.createGlobalStyle`
 
     --neut: rgba(217, 217, 217, 0.5);
     --neut-2: rgba(47, 47, 47, 0.5);
+    --pri-color: #154b34;
 
     --font-primary: 'Urbanist', sans-serif;
   }
@@ -18,6 +19,10 @@ export const GlobalStyles = styled.createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  }
+
+  html {
+    scroll-snap-type: y mandatory;
   }
 
   .draggable-panel {
