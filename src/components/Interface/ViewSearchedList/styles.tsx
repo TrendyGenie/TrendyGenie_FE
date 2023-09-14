@@ -1,6 +1,21 @@
 'use client';
 import styled from 'styled-components';
 
+export const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  button {
+    border: none;
+    color: #fff;
+    background: black;
+    font-size: 0.6rem;
+    padding: 0.4em;
+    border-radius: 0.3em;
+  }
+`;
+
 export const Title = styled.h1`
   align-self: flex-start;
   width: 15.4375rem;
@@ -123,10 +138,10 @@ export const ReelsInfo = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 1rem;
   color: #000;
   font-family: var(--font-primary);
   gap: 0.12rem;
+  max-width: 10em;
 `;
 
 export const ReelsInfoTitle = styled.h2`

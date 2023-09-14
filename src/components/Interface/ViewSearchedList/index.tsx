@@ -1,5 +1,7 @@
+'use client';
 import Image from 'next/image';
 import {
+  Header,
   Title,
   Container,
   Card,
@@ -18,6 +20,8 @@ import map_icon from '../../../../public/svgs/map_colored.svg';
 import ic_clock from '../../../../public/svgs/clock-colored.svg';
 import ic_phone from '../../../../public/svgs/ic_phone.svg';
 import { FC } from 'react';
+import { useRecoilState } from 'recoil';
+import { queryAtom } from '../../../../atoms/searchAtom';
 
 interface ViewSearchedListProps {
   places: any;
@@ -25,9 +29,23 @@ interface ViewSearchedListProps {
 }
 
 const ViewSearchedList: FC<ViewSearchedListProps> = ({ places, expanded }) => {
+  const [query, setQuery] = useRecoilState(queryAtom);
   return (
     <>
-      <Title>View List</Title>
+      <Header>
+        <Title>View List</Title>
+        <button
+          type="button"
+          onClick={() =>
+            setQuery({
+              query: '',
+              isSearch: false,
+            })
+          }
+        >
+          Go Back
+        </button>
+      </Header>
       <Container className={expanded ? 'column' : ''}>
         {places.map((place: any) => (
           <Card key={place}>
@@ -39,7 +57,7 @@ const ViewSearchedList: FC<ViewSearchedListProps> = ({ places, expanded }) => {
                 </ReelsInfoSubtitle>
                 <Address>
                   <Image src={map_icon} alt="Map Icon" />
-                  16, white close .ikeja lagos
+                  {place.formatted_address}
                 </Address>
                 <Distance>6km Away</Distance>
                 <OpenTime>

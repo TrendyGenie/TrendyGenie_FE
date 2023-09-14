@@ -24,7 +24,7 @@ export const useGooglePlace = () => {
         query: query.input,
         type,
         radius,
-        location: bounds ? bounds : locations,
+        location: bounds.lat !== 0 && bounds.lng !== 0 ? bounds : locations,
       });
       const data = await response.data.data;
       if (data) {

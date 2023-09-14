@@ -4,6 +4,7 @@ import { Wrapper, DragIcon } from './styles';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   loadingAtom,
+  locationAtom,
   placesAtom,
   queryAtom,
   typeAtom,
@@ -21,10 +22,17 @@ const BottomSheet: FC = () => {
   const [expanded, setExpanded] = useState(false);
   const [type, setType] = useRecoilState(typeAtom);
   const { getPlaces } = useGooglePlace();
+  const [, setLocation] = useRecoilState(locationAtom);
   const query = useRecoilValue(queryAtom);
   const places = useRecoilValue(placesAtom);
   const loading = useRecoilValue(loadingAtom);
   const bounds = useRecoilValue(boundsAtom);
+
+  useEffect(() => {
+    if (query.isSearch) {
+      setLocation(places[0].geometry.location);
+    }
+  }, [places, query.isSearch, setLocation]);
 
   useEffect(() => {
     if (type) {

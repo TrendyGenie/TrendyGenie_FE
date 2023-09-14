@@ -1,7 +1,8 @@
-"use client";
-import { RecoilRoot } from 'recoil';
+'use client';
+import { RecoilRoot, useRecoilState, useRecoilValue } from 'recoil';
 import StyledComponentsRegistry from '../../../lib/registry';
 import { GlobalStyles } from './GlobalStyles';
+
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (

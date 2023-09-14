@@ -1,8 +1,6 @@
 'use client';
-
 import Image from 'next/image';
 import { Form, Input } from './styles';
-import { debounce } from '../../../../lib/debounce';
 import search from '../../../../public/svgs/search.svg';
 import { useGooglePlace } from '../../../../lib/axios';
 import { useRecoilState } from 'recoil';
@@ -22,7 +20,7 @@ const QueryForm = ({ setExpanded }: QueryFormProps) => {
         alt="Search"
         onClick={() => {
           setExpanded(false);
-          debounce(getPlaces, 1000);
+          getPlaces();
           setQuery({ ...query, isSearch: true });
         }}
       />

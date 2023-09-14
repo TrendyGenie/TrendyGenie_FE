@@ -1,10 +1,11 @@
 'use client';
 import React, { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, MarkerF } from '@react-google-maps/api';
-import { useRecoilState } from 'recoil';
-import { locationAtom } from '../../../../atoms/searchAtom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { locationAtom, placesAtom } from '../../../../atoms/searchAtom';
 import { debounce } from '../../../../lib/debounce';
 import { boundsAtom } from '../../../../atoms/boundsAtom';
+import Markers from '../Markers';
 
 // You can call getCenter() within an async function to get the center coordinates.
 
@@ -14,9 +15,9 @@ const containerStyle = {
 };
 
 function GoogleMaps() {
-  const [location, setLocation] =
-    useRecoilState<google.maps.LatLngLiteral>(locationAtom);
-  const [bounds, setBounds] = useRecoilState(boundsAtom);
+  const places = useRecoilValue(placesAtom);
+  const [location] = useRecoilState<google.maps.LatLngLiteral>(locationAtom);
+  const [, setBounds] = useRecoilState(boundsAtom);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!, // Replace with your Google Maps API key
@@ -35,29 +36,6 @@ function GoogleMaps() {
   const onUnmount = useCallback(() => {
     setMap(null);
   }, [setMap]);
-
-  useEffect(() => {
-    const getUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            setLocation({ lat, lng });
-          },
-
-          (error) => {
-            console.log(error);
-          }
-        );
-
-        if (location.lat !== 0 && location.lng !== 0) {
-          return location;
-        }
-      }
-    };
-    getUserLocation();
-  }, [location, setLocation]);
 
   return isLoaded ? (
     <GoogleMap
@@ -81,7 +59,9 @@ function GoogleMaps() {
         }
       }}
     >
-      <MarkerF position={location!} />
+      {places.map((place: any) => (
+        <Markers key={place.place_id} {...place} />
+      ))}
     </GoogleMap>
   ) : (
     <></>
