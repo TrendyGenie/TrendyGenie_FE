@@ -21,7 +21,8 @@ import ic_clock from '../../../../public/svgs/clock-colored.svg';
 import ic_phone from '../../../../public/svgs/ic_phone.svg';
 import { FC } from 'react';
 import { useRecoilState } from 'recoil';
-import { queryAtom } from '../../../../atoms/searchAtom';
+import { locationAtom, queryAtom } from '../../../../atoms/searchAtom';
+import { boundsAtom } from '../../../../atoms/boundsAtom';
 
 interface ViewSearchedListProps {
   places: any;
@@ -30,25 +31,51 @@ interface ViewSearchedListProps {
 
 const ViewSearchedList: FC<ViewSearchedListProps> = ({ places, expanded }) => {
   const [query, setQuery] = useRecoilState(queryAtom);
+  const [location, setLocation] = useRecoilState(locationAtom);
+  const [, setBounds] = useRecoilState(boundsAtom);
+
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          setLocation({ lat, lng });
+        },
+
+        (error) => {
+          console.log(error);
+        }
+      );
+    }
+  };
   return (
     <>
       <Header>
         <Title>View List</Title>
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
             setQuery({
               query: '',
               isSearch: false,
-            })
-          }
+            });
+            setBounds({
+              lat: 0,
+              lng: 0,
+            });
+
+            setTimeout(() => {
+              getUserLocation();
+            }, 1000);
+          }}
         >
           Go Back
         </button>
       </Header>
       <Container className={expanded ? 'column' : ''}>
         {places.map((place: any) => (
-          <Card key={place}>
+          <Card key={place.place_id}>
             <Top>
               <ReelsInfo>
                 <ReelsInfoTitle>{place.name}</ReelsInfoTitle>

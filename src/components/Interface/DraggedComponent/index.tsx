@@ -56,7 +56,7 @@ const BottomSheet: FC = () => {
       }
     }
   };
-  console.log(places);
+  // console.log(places);
 
   return (
     <Wrapper className={expanded ? 'expanded' : ''}>
