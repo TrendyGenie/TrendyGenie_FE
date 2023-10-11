@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import styled from 'styled-components';
 
 export const Header = styled.div`
@@ -25,7 +26,7 @@ export const Title = styled.h1`
   font-weight: 700;
 `;
 
-export const Card = styled.div`
+export const Card = styled(Link)`
   display: flex;
   height: auto;
   padding: 0.9375rem 0.3125rem 1.3125rem 0.9375rem;

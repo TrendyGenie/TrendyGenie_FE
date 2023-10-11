@@ -75,7 +75,7 @@ const ViewSearchedList: FC<ViewSearchedListProps> = ({ places, expanded }) => {
       </Header>
       <Container className={expanded ? 'column' : ''}>
         {places.map((place: any) => (
-          <Card key={place.place_id}>
+          <Card key={place.place_id} href={`search-result/${place.place_id}`}>
             <Top>
               <ReelsInfo>
                 <ReelsInfoTitle>{place.name}</ReelsInfoTitle>
