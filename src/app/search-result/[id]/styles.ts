@@ -1,5 +1,4 @@
 'use client';
-import Link from 'next/link';
 import styled from 'styled-components';
 
 export const Header = styled.div`
@@ -26,33 +25,26 @@ export const Title = styled.h1`
   font-weight: 700;
 `;
 
-export const Card = styled(Link)`
+export const FlexCtn = styled.div`
   display: flex;
-  height: auto;
-  padding: 0.9375rem 0.3125rem 1.3125rem 0.9375rem;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.375rem;
-  border-radius: 0.625rem;
-  background: var(--light-prim, #f2fffa);
-  flex-shrink: 0;
-  text-decoration: none;
+  justify-content: space-between;
+  padding-bottom: 1em;
+  border-bottom: 1px solid var(--neut-2, rgba(47, 47, 47, 0.5));
 `;
 
 export const Top = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   gap: 1.62rem;
 `;
 
 export const RelativeCtn = styled.div`
   position: relative;
-  width: 3.75rem;
-  height: 3.8125rem;
+
   img {
     display: flex;
     flex-shrink: 0;
-    border-radius: 0.625rem;
     object-fit: cover;
   }
 `;
@@ -90,48 +82,34 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  overflow-x: auto;
   gap: 0.88rem;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 100vh;
+  background: var(--light-prim, #f2fffa);
+  padding: 1.5em;
 
-  &.column {
+  ${Top} {
+    width: 100%;
+    position: relative;
+  }
+
+  ${RelativeCtn} {
+    width: 100%;
+    height: 12.0625rem;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  ${ContactCtn} {
     flex-direction: column;
-    overflow-y: auto;
-    height: 450px;
+    gap: 0.25rem;
 
-    ${Card} {
+    button {
       width: 100%;
-      justify-content: space-between;
-      padding: 1em;
-      position: relative;
-    }
-
-    ${Top} {
-      flex-direction: column-reverse;
-      width: 100%;
-      position: relative;
-    }
-
-    ${RelativeCtn} {
-      width: 100%;
-      height: 12.0625rem;
-
-      img {
-        width: 100%;
-      }
-    }
-
-    ${ContactCtn} {
-      flex-direction: column;
-      gap: 0.25rem;
-
-      position: absolute;
-      right: 1rem;
-      top: 250px;
-
-      button {
-        width: 100%;
-        justify-content: center;
-      }
+      justify-content: center;
     }
   }
 `;
@@ -140,20 +118,21 @@ export const ReelsInfo = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  color: #000;
   font-family: var(--font-primary);
   gap: 0.12rem;
-  max-width: 10em;
+  max-width: 11.4375rem;
+  color: #000;
 `;
 
 export const ReelsInfoTitle = styled.h2`
-  max-width: 8.875rem;
-  font-size: 0.9375rem;
   font-weight: 700;
-  text-transform: capitalize;
+  font-size: 1.125rem;
+  font-weight: 700;
 `;
 
 export const ReelsInfoSubtitle = styled.p`
+  color: var(--neut-2, rgba(47, 47, 47, 0.5));
+  font-family: var(--font-primary);
   font-size: 0.5rem;
   font-weight: 400;
 `;
@@ -179,4 +158,12 @@ export const OpenTime = styled.div`
   gap: 0.0625rem;
   font-size: 0.5rem;
   font-weight: 400;
+`;
+
+export const Desc = styled.p`
+  color: #000;
+  font-family: var(--font-primary);
+  font-size: 0.375rem;
+  font-weight: 400;
+  max-width: 9.9375rem;
 `;

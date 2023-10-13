@@ -23,6 +23,7 @@ import { FC } from 'react';
 import { useRecoilState } from 'recoil';
 import { locationAtom, queryAtom } from '../../../../atoms/searchAtom';
 import { boundsAtom } from '../../../../atoms/boundsAtom';
+import { resultState } from '../../../../atoms/result';
 
 interface ViewSearchedListProps {
   places: any;
@@ -33,6 +34,7 @@ const ViewSearchedList: FC<ViewSearchedListProps> = ({ places, expanded }) => {
   const [query, setQuery] = useRecoilState(queryAtom);
   const [location, setLocation] = useRecoilState(locationAtom);
   const [, setBounds] = useRecoilState(boundsAtom);
+  const [, setResults] = useRecoilState(resultState);
 
   const getUserLocation = () => {
     if (navigator.geolocation) {
@@ -75,7 +77,11 @@ const ViewSearchedList: FC<ViewSearchedListProps> = ({ places, expanded }) => {
       </Header>
       <Container className={expanded ? 'column' : ''}>
         {places.map((place: any) => (
-          <Card key={place.place_id} href={`search-result/${place.place_id}`}>
+          <Card
+            key={place.place_id}
+            href={`search-result/${place.place_id}`}
+            onClick={() => setResults(place)}
+          >
             <Top>
               <ReelsInfo>
                 <ReelsInfoTitle>{place.name}</ReelsInfoTitle>
