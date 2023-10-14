@@ -47,4 +47,8 @@ export const GlobalStyles = styled.createGlobalStyle`
   .collapsed {
     transform: translateY(100%);
   }
+
+  a {
+    text-decoration: none;
+  }
 `;

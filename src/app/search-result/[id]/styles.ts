@@ -87,7 +87,7 @@ export const Container = styled.div`
   overflow-y: auto;
   min-height: 100vh;
   background: var(--light-prim, #f2fffa);
-  padding: 1.5em;
+  padding: 1em;
 
   ${Top} {
     width: 100%;

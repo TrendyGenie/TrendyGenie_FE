@@ -171,6 +171,7 @@ export const Address = styled.div`
   font-size: 0.5rem;
   font-weight: 700;
   text-decoration-line: underline;
+  color: #000;
 `;
 
 export const OpenTime = styled.div`
