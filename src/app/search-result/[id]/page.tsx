@@ -7,6 +7,7 @@ import Tops from '@/components/Interface/SearchResult/Top';
 import { Container } from './styles';
 import OtherSearches from '@/components/Interface/SearchResult/OtherSearches';
 import { usePathname } from 'next/navigation';
+import AllReviews from '@/components/Interface/SearchResult/AllReviews';
 
 const Result = () => {
   const results = useRecoilValue(resultState);
@@ -18,6 +19,7 @@ const Result = () => {
     <Container>
       <Tops results={results} searchQuery={searchQuery} />
       <OtherSearches places={places} id={id} searchQuery={searchQuery} />
+      <AllReviews />
     </Container>
   );
 };

@@ -30,8 +30,7 @@ const BottomSheet: FC = () => {
 
   useEffect(() => {
     if (query.isSearch) {
-      setLocation(places[0].geometry.location);
-    }
+      setLocation(places[0].geometry.location); }
   }, [places, query.isSearch, setLocation]);
 
   useEffect(() => {

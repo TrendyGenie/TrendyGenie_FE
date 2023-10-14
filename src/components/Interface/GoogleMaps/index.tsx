@@ -44,6 +44,20 @@ function GoogleMaps() {
       zoom={15}
       onLoad={onLoad as any}
       onUnmount={onUnmount}
+      onCenterChanged={() => {
+        if (map) {
+          const center = map.getCenter() as google.maps.LatLng;
+
+          const debounced = debounce(() => {
+            setBounds({
+              lat: center.lat(),
+              lng: center.lng(),
+            });
+          }, 1500);
+
+          debounced();
+        }
+      }}
     >
       {places.map((place: any) => (
         <Markers key={place.place_id} {...place} />
